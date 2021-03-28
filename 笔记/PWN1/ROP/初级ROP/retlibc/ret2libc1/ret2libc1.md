@@ -11,23 +11,23 @@
 
 
 
-首先file和checksec一下![1](C:\Users\86177\Desktop\PWN\retlibc\ret2libc1\1.png)
+首先file和checksec一下![1](1.png)
 
 ida查看，没有后门函数，nx打开，且是动态链接程序
 
-![2](C:\Users\86177\Desktop\PWN\retlibc\ret2libc1\2.png)
+![2](2.png)
 
 虽然说没有后门函数，但是调用了system函数：
 
-![3](C:\Users\86177\Desktop\PWN\retlibc\ret2libc1\3.png)
+![3](3.png)
 
 并且有/bin/sh字符串：
 
-![4](C:\Users\86177\Desktop\PWN\retlibc\ret2libc1\4.png)
+![4](4.png)
 
 gdb调试，ebp:0xffffd128
 
-![5](C:\Users\86177\Desktop\PWN\retlibc\ret2libc1\5.png)
+![5](5.png)
 
 所以exp可以这样：
 
@@ -42,4 +42,4 @@ io.sendline(payload)
 io.interactive()
 ```
 
-![6](C:\Users\86177\Desktop\PWN\retlibc\ret2libc1\6.png)
+![6](6.png)

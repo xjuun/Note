@@ -73,7 +73,7 @@ unlink被实现为了一个宏：
 
 这里以small bin的unlink举例：
 
-<img src="D:\Desktop\PWN1\堆\堆溢出\Unlink.assets\image-20210327001414460.png" alt="image-20210327001414460" style="zoom:50%;" />
+<img src="Unlink.assets\image-20210327001414460.png" alt="image-20210327001414460" style="zoom:50%;" />
 
 可以看出P最后的fd和bk指针并没有发生变化
 

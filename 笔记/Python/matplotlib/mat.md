@@ -159,7 +159,7 @@ plt.show()
 
 ## 总结
 
-<img src="D:\笔记\Python\matplotlib\Untitled.assets\image-20210328141115352.png" alt="image-20210328141115352" style="zoom:50%;" />
+<img src="Untitled.assets\image-20210328141115352.png" alt="image-20210328141115352" style="zoom:50%;" />
 
 # Matplotlib常用统计图
 

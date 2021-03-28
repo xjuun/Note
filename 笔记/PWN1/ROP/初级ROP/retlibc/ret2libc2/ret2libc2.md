@@ -18,7 +18,7 @@ io.sendline("/bin/sh")
 io.interactive()
 ```
 
-![1](C:\Users\86177\Desktop\PWN\retlibc\ret2libc2\1.png)
+![1](1.png)
 
 当然，exp也可以这样写：
 

@@ -2,7 +2,7 @@
 
 首先file和checksec一下：
 
-![1](C:\Users\86177\Desktop\PWN\ret2syscall\1.png)
+![1](1.png)
 
 这题是静态链接的，所以比较大，
 
@@ -27,18 +27,18 @@ ecx = 0
 edx = 0
 ```
 
-![2](C:\Users\86177\Desktop\PWN\ret2syscall\2.png)
+![2](2.png)
 
 可以看到有许多gadget，选一些有用的就OK。
 
 gdb调试，ebp：0xffffd128
 
-![3](C:\Users\86177\Desktop\PWN\ret2syscall\3.png)
+![3](3.png)
 
 exp如下：
 
-![4](C:\Users\86177\Desktop\PWN\ret2syscall\4.png)
+![4](4.png)
 
 画图来说就是：（下图并不是上面exp的图）
 
-![5](C:\Users\86177\Desktop\PWN\ret2syscall\5.png)
+![5](5.png)
