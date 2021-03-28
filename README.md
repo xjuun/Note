@@ -25,7 +25,7 @@
   │  └─格式化字符串             
   ├─Python              
   │  ├─matplotlib           
-  │  │  └─Untitled.assets       
+  │  │  └─Untitled.assets 
   │  └─thinker            
   └─小迪                
                    
