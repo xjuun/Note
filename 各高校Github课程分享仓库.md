@@ -3,11 +3,13 @@
 -   [浙江大学课程攻略共享计划](https://github.com/QSCTech/zju-icicles)
 -   [清华大学计算机系课程攻略](https://github.com/PKUanonym/REKCARC-TSC-UHT)
 -   [北京大学](https://github.com/lib-pku/libpku)
+-   [哈工大（深圳）计算机专业课程攻略](https://github.com/hewei2001/HITSZ-CS-GEEK)
 -   [上海交通大学课程分享](https://github.com/c-hj/SJTU-Courses)
 -   [东南大学课程共享计划](https://github.com/zjdx1998/seucourseshare)
 -   [中国科学技术大学课程资源](https://github.com/USTC-Resource/USTC-Course)
 -   [山东科技大学课程资源共享计划](https://github.com/deepwzh/sdust-examination-materials)
 -   [广东工业大学计算机学院课程攻略](https://github.com/brenner8023/gdut-course)
+
 
 ## 前言（摘自浙大开源项目）
 
