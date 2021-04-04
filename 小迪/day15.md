@@ -29,3 +29,14 @@ mssql等其他数据库
 		...
 ```
 
+Access数据库的话没有`information_schema` ，所以只能靠猜。
+
+MongoDB的查询文档的方式与其他数据库略微不同，当进行查询的时候，MySQL是用where，而MongoDB是以键值对形式进行查询的。
+
+
+
+遗留问题：
+
+-   Access猜不到表和列怎么办？
+
+    Access偏移注入
