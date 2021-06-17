@@ -90,6 +90,97 @@ cv.VideoCapture(),cv.VideoWriter()
 
 -   保存视频：cv.imwrite()
 
+# 2.3OpenCV中的绘图功能
+
+cv.line(),cv.circle(),cv.retangle(),cv.ellipse(),cv.putTest()等
+
+常见参数：
+
+-   img：要绘制图形的图像
+-   color：形状的颜色
+-   厚度：线或圆等的粗细。如果对比和图形传递-1.那么会填充
+-   lineType：线的类型，是否为8连接线，抗锯齿线等。*默认情况下*，为8连接线。
+
+
+
+## 画线
+
+```python
+import cv2 as cv
+import numpy as np
+
+img = np.zeros([512,512,3],np.uint8)
+cv.line(img,(0,0),(511,511),(255,0,0),5)
+cv.imshow("12",img)
+cv.waitKey(0)
+cv.destroyAllWindows()
+```
+
+## 画矩形
+
+左上和右下
+
+```python
+cv.rectangle(img,(384,0),(0,255,0),3)
+```
+
+## 画圆
+
+圆心和半径
+
+```python
+cv.circle(img,(447,63),63,(0,0,255),-1)
+```
+
+## 画椭圆
+
+`ellipse(img, center, axes, angle, startAngle, endAngle, color[, thickness[, lineType[, shift]]])`
+
+-   `img`：要在上面画椭圆的图像
+-   `center`：椭圆的中心
+-   `axes`：椭圆的轴长，格式为 `(长轴长度的一半, 短轴长度的一半)`
+-   `angle`：椭圆沿水平方向逆时针旋转的角度
+-   `startAngle`：沿长轴顺时针方向开始显示的角度
+-   `endAngle`：沿长轴顺时针结束显示的角度
+-   `thickness`：椭圆边框的粗细，`cv.FILLED` 表示绘制实心椭圆
+-   `lineType`：椭圆边框的类型
+-   `shift`：坐标精确到小数点后第几位
+
+```python 
+cv.ellipse(img,(100,100),(50,30),0,0,0,(0, 255, 0))
+```
+
+
+
+# 2.4鼠标作为画笔
+
+cv.setMouseCallback()
+
+## 简单演示
+
+```python
+import numpy as np
+import cv2 as cv
+#鼠标回调函数
+def draw_circle(event,x,y,flag,param):
+    if event == cv.EVENT_LBUTTONDOWN:
+        cv.circle(img,(x,y),20,(255,0,0),-1)
+
+img = np.zeros((512,512,3),np.uint8)
+cv.namedWindow('12')
+cv.setMouseCallback("12",draw_circle)
+while(1):
+    cv.imshow('12',img)
+    if cv.waitKey(20) & 0xFF == 27:
+        break
+
+cv.destroyAllWindows()
+```
+
+
+
+
+
 
 
 
