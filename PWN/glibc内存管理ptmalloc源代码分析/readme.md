@@ -286,4 +286,29 @@ struct malloc_state {
 
 ## 5.5ptmalloc的初始化
 
-P53页
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
