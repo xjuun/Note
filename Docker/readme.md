@@ -196,10 +196,18 @@ docker search mysql
 
 **docker pull** ：下载镜像
 
-```
+```shell
 #下载镜像 docker pull 镜像名:tag[]
 未加tag的话是最新的
 
+#分层下载，dockerimage 核心 联合文件系统
+```
+
+**docker rmi**：删除镜像
+
+```shell
+#可以按照id删除
+docker rmi -f ID
 ```
 
 
