@@ -212,25 +212,149 @@ docker rmi -f ID
 
 
 
+# 10.容器命令
+
+  有镜像才可以创建容器，下面下载centos来测试学习
+
+```shell
+docker pull centos
+```
+
+**新建容器并启动：**
+
+```shell
+docker run [可选参数] image
+
+#参数说明
+--name="Name" #容器名字 ，用来取分容器
+-d #后台方式运行
+-it   #使用交互方式，进入容器查看内容
+-p  #指定容器的端口  :8080       8080:8080
+	-p 主机端口：容器端口
+	-p 容器端口
+	容器端口
+-P  #随机指定端口
+
+exit  #退出 
+```
+
+**列出所有运行中的容器：**
+
+```shell
+docker ps
+	#列出当前正在运行的容器
+-a 	#列出当前正在运行的容器 + 列出历史运行过的容器
+-n=? #显示最近创建的容器
+-q  #只显示容器的编号
+```
+
+**退出容器**
+
+```shell
+exit  #退出 并停止
+ctrl +p +q #退出，不停止
+```
+
+**删除容器**
+
+```shell
+docker rm 容器id #删除指定容器，不能删除正在运行的容器
+#强制删除，-f
+
+```
+
+**启动和停止容器的操作**
+
+```shell
+docker start 容器id
+docker restart 容器id
+docker stop 容器id
+docker kill 容器id
+```
+
+# 11.日志、元数据、进程的查看
+
+**后台启动**
+
+```shell
+#docker run -d 镜像名
+#问题 docker ps ， 发现centos停止了
+#---常见的坑：docker容器使用后台运行，就必须要有一个前台进程，docker发现没有应用，就会自动停止
+
+```
+
+**查看日志命令**
+
+```shell
+docker logs -f -t --tail 数字 容器
+-tf  #显示日志
+--tail 数字 #要显示日志的条数
+```
+
+**查看容器中进程信息**
+
+```shell
+# docker top 容器id
+```
+
+**查看镜像的元数据**
+
+```shell
+docker inspect 容器id
+```
+
+# 12.进入容器的命令和拷贝命令
+
+**进入当前正在运行的容器**
+
+```shell
+#我们通常容器都是使用后台方式运行的，需要进入容器，修改一些配置
+
+#命令
+docker exec -it 容器id /bin/sh        #bash shell
+docker attach 容器id
+
+#docker exec #进入容器后打开一个新的终端
+#docker attach # 进入容器正在执行的终端
+```
+
+**从容器拷贝文件到主机上**
+
+```shell
+docker cp 容器id：容器内路径  目的的主机路径
+```
+
+# 13.常用命令小结
+
+# 14.作业一：部署Nginx
+
+1.  拉取Nginx
+
+    >   docker pull nginx
+
+2.  启动
+
+    >   docker images
+    >
+    >   docker run  -d --name nginx001 -p 1234:80 nginx
+
+3.  查看
+
+    >   docker ps
+
+4.  运行测试
+
+    >   curl localhost:80
+
+端口转发：
+
+![image-20210622170305886](readme/image-20210622170305886.png)
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# 到此就先告一段落，如果以后需要深入了解docker的话再学
 
 
 
