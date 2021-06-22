@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="46e4b161-2271-4ec9-9bb3-a55e528407a7" name="Default Changelist" comment="">
+    <list default="true" id="46e4b161-2271-4ec9-9bb3-a55e528407a7" name="Default Changelist" comment="Default Changelist">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/02.py" beforeDir="false" afterPath="$PROJECT_DIR$/02.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PWN/glibc内存管理ptmalloc源代码分析/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/../PWN/glibc内存管理ptmalloc源代码分析/readme.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Python/爬虫/day1.md" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -13,6 +13,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/02.py" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectId" id="1u1lJ81Kj9g3l6Kchp6Mlm4IiVd" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />

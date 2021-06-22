@@ -1,2 +1,6 @@
-#!/usr/bin/python
-print("123")
+
+
+import requests
+
+if __name__ == "__main__":
+    #指定url
