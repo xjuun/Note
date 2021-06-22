@@ -18,8 +18,9 @@ if __name__ == "__main__":
     #获取相应数据：json方法返回的是obj（如果确认相应的数据时json类型的，才可以使用json）
     dic_obj = response.json()
     print(dic_obj)
+    fileName = word+'.json'
     #持久化储存
-    fp=open('./dog.json','w',encoding='utf-8')
+    fp=open(fileName,'w',encoding='utf-8')
     json.dump(dic_obj,fp=fp,ensure_ascii=False)
     print("over!")
 

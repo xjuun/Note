@@ -91,3 +91,10 @@ AJAX 是与服务器交换数据并更新部分网页的艺术，在不重新加
 
 post请求，相应数据是json数据
 
+# 9.requests之豆瓣电影爬取
+
+具体代码在code文件夹下
+
+# 10.作业
+
+作业url：http://www.kfc.com.cn/kfccda/storelist/index.aspx
