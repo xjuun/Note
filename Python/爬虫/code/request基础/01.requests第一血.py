@@ -13,6 +13,6 @@ if __name__ == "__main__":
     page_text = response.text
     print(page_text)
     #step: 持久化存储
-    with open('./bilibili.html','w',encoding='utf-8') as fp:
+    with open('../bilibili.html', 'w', encoding='utf-8') as fp:
         fp.write(page_text)
     print('爬取数据结束')

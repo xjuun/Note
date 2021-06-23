@@ -98,3 +98,45 @@ post请求，相应数据是json数据
 # 10.作业
 
 作业url：http://www.kfc.com.cn/kfccda/storelist/index.aspx
+
+# 11. 综合练习-药监总局01
+
+ 药监总局地址：http://scxk.nmpa.gov.cn:81/xk/
+
+![image-20210623160201968](readme/image-20210623160201968.png)
+
+ajax
+
+![image-20210623160224027](readme/image-20210623160224027.png)
+
+# 12.综合练习-药监总局02
+
+# 13.综合练习-药监总局03screenflow
+
+# 14.综合练习-药监总局04screenflow
+
+# 15.总结回顾
+
+接下来要讲的：
+
+-   聚焦爬虫
+-   正则
+-   bs4
+-   xpath
+
+# 16.数据解析概述
+
+ 数据解析分类：
+
+-   正则
+-   bs4
+-   xpath
+
+# 17.图片数据爬取
+
+见0.图片爬取.py
+
+# 18.正则解析案例01
+
+
+
