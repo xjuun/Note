@@ -15,5 +15,5 @@ func main() {
 
 	//声明int8类型 的变量
 	a3 := int8(123)
-	fmt.Printf("a3: %b\n", a3)
+	fmt.Printf("a3: %d\n", a3)
 }

@@ -33,4 +33,13 @@ func main() {
 	for aa, bb := range h {
 		fmt.Println(aa, bb)
 	}
+
+	//多维数组
+	qaa := [3][2]string{
+		{"sdf", "sf"},
+		{"xcv", "xcv"},
+		{"qwe", "wer"},
+	}
+	fmt.Println(qaa)
+
 }
