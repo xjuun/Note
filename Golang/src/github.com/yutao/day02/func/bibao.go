@@ -21,8 +21,6 @@ func main() {
 	f1(ret)
 }
 
-//写一个函数，可以f3(),使得f3的返回值可以放到f1中
-
 func f3(f func(int, int), x, y int) func() {
 	a := func() {
 		f2(x, y)
