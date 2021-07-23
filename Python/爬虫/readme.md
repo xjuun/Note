@@ -140,11 +140,48 @@ ajax
 
 # 20.bs4解析
 
+环境：
+
+```python
+pip install bs4
+pip install lxml
+```
 
 
 
+实例化beautifulsoup对象：
+
+`from bs4 import BeautifulSoup`
+
+对象的实例化：
+
+1.  将本地的HTML文件的数据加载到该对象中：
+
+    ```python
+    fp = open("../bilibili.html",'r',encoding='utf-8')
+    soup = BeautifulSoup(fp,'lxml')
+    print(soup)
+    ```
+
+2.  将互联网上的。。。
+
+    ```python
+    page_text = response.text
+    soup = BeautifulSoup(page_text,'lxml')
+    ```
+
+    
+
+# 23.xpath解析
+
+xpath解析：最常用且最便捷高效的一中解析方式，通用性
 
 
+
+xpath解析原理：
+
+1.  实例化一个etree的对象，且需要将被解析的页面源码数据加载到该对象中
+2.  调佣etree对象中的xpath方法结合xpath表达式实现标签的定位和内容的捕获。
 
 
 
