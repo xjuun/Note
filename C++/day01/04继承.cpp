@@ -50,3 +50,12 @@ public:
     int MAX(int x, int y);
 };
 //////////////////////////////////////////////////////////////
+class X
+{
+private:
+    int x, y;
+} class Y : public X
+{
+private:
+    int q, w;
+}
