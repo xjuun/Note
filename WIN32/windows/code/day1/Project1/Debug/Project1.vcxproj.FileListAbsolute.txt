@@ -1,2 +1,0 @@
-D:\github_git\Note\WIN32\windows\code\day1\Project1\Debug\Project1.exe
-D:\github_git\Note\WIN32\windows\code\day1\Project1\Debug\Project1.pdb
