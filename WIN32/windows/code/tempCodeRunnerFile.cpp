@@ -1,0 +1,1 @@
+-L MinGW\lib -lgdi32
